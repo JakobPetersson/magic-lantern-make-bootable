@@ -1,4 +1,4 @@
-#! /bin/bash -x
+#!/usr/bin/env bash
 # v1 : FAT16 and FAT32, based on Trammel version
 # v2 : exFAT supported. arm.indiana@gmail.com
 # v3 : Osx and Linux auto detect device
@@ -10,6 +10,8 @@
 # usage: make_bootable.sh (card needs to be formatted on camera or have volume name: EOS_DIGITAL)
 # exfat_sum.c must bu compiled first
 
+set -euo pipefail
+
 dump_file=exfat_dump.bin
 
 # Auto detects the card if formatted incamera before using this script
@@ -18,7 +20,8 @@ if [[ $OSTYPE == darwin* ]]; then   # OS X
 elif [[ $OSTYPE == linux* ]]; then   # Linux
   UNMOUNT='umount'
 fi
-if [[ -z $1 ]]; then
+
+if [ -z "${1:-}" ]; then
   dev=$(mount | grep EOS_DIGITAL | awk '{print $1}' )
   if [ "x$dev" = "x" ]; then
     echo "The EOS_DIGITAL card should be mounted before running the script."
